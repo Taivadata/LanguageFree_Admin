@@ -1,0 +1,368 @@
+﻿@page
+@model LanguageClient.Pages.Charts.LanguagesAnalysisModel
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<!-- partial -->
+<!-- partial:../../partials/_sidebar.html -->
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item">
+            <div class="d-flex sidebar-profile">
+                <div class="sidebar-profile-image">
+                    <img src="~/assests/images/faces/face29.png" alt="image">
+                    <span class="sidebar-status-indicator"></span>
+                </div>
+                <div class="sidebar-profile-name">
+                    <p class="sidebar-name">
+                        Kenneth Osborne
+                    </p>
+                    <p class="sidebar-designation">
+                        Welcome
+                    </p>
+                </div>
+            </div>
+           
+            <p class="sidebar-menu-title mt-3">Menu</p>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-page="/Index">
+                <i class="typcn typcn-device-desktop menu-icon"></i>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-page="/Admin/UserList">
+                <i class="typcn typcn-user-outline menu-icon"></i>
+                <span class="menu-title">User List</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-page="/Admin/Feedback">
+                <i class="typcn typcn-message-typing menu-icon"></i>
+                <span class="menu-title">Feedback</span>
+            </a>
+        </li>
+                <li class="nav-item">
+            <a class="nav-link" asp-page="/Admin/Rates">
+                <i class="typcn typcn-star-full-outline menu-icon"></i>
+                <span class="menu-title">Favorites List</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" data-toggle="collapse" asp-page="#charts" aria-expanded="false"
+               aria-controls="charts">
+                <i class="typcn typcn-chart-bar-outline menu-icon"></i>
+                <span class="menu-title">Overview Statistics</span>
+                <i class="menu-arrow"></i>
+            </a>
+           
+        </li>
+        <div class="collapse" id="charts">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           asp-page="/Charts/AccountsAnalysis">
+                            Accounts
+                            Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           asp-page="/Charts/UsersAnalysis">
+                            Users
+                            Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           asp-page="/Charts/LanguagesAnalysis" style="color: #fff;">
+                            Languages
+                            Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           asp-page="/Charts/ScreensAnalysis">
+                            Screens
+                            Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           asp-page="/Charts/TranslationAnalysis">
+                            Translations
+                            Analysis
+                        </a>
+                    </li>
+                </ul>
+            </div>
+    </ul>
+</nav>
+<!-- partial -->
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Most Source Language Used</h4>
+                        <div class="ele-btn">
+                            <form asp-page="LanguagesAnalysis" asp-page-handler="YearSource" method="post">
+                                <input type="date" id="selectDateEndYearSource" asp-for="selectDateEndYearSource" name="selectDateEndYearSource" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" hidden />
+                                <button id="btnYear" type="submit">Last 365 Days</button>
+                            </form>
+                            <form asp-page="LanguagesAnalysis" asp-page-handler="QuarterSource" method="post">
+                                <input type="date" id="selectDateEndQuarterSource" asp-for="selectDateEndQuarterSource" name="selectDateEndQuarterSource" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" hidden />
+                                <button id="btnQuarter" type="submit">Last 90 Days</button>
+                            </form>
+                            <form asp-page="LanguagesAnalysis" asp-page-handler="MonthSource" method="post">
+                                <input type="date" id="selectDateEndMonthSource" asp-for="selectDateEndMonthSource" name="selectDateEndMonthSource" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" hidden />
+                                <button id="btnMonth" type="submit">Last 30 Days</button>
+                            </form>
+                            <form asp-page="LanguagesAnalysis" asp-page-handler="WeekSource" method="post">
+                                <input type="date" id="selectDateEndWeekSource" asp-for="selectDateEndWeekSource" name="selectDateEndWeekSource" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" hidden />
+                                <button id="btnWeek" type="submit">Last 7 Days</button>
+                            </form>
+                            <form asp-page="LanguagesAnalysis" asp-page-handler="Filter" method="post">
+                                <input type="date" id="selectDateStart" asp-for="selectDateStart" name="selectDateStart" value="@DateTime.Now.AddDays(-8).ToString("yyyy-MM-dd")" />
+                                <input type="date" id="selectDateEnd" asp-for="selectDateEnd" name="selectDateEnd" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" />
+                                <button id="btnApply" type="submit">Apply</button>
+                            </form>
+                        </div>
+                        <canvas id="barChart_Source_Language" data-source-language='{"labels":["Afrikaans (South Africa)", "Albanian (Albania)", "Amharic (Ethiopia)", "Arabic (Egypt)", "Azerbaijani (Azerbaijan)", "Armenian (Armenia)", "Basque (Spain)", "Bengali (India)", "Bulgarian (Bulgaria)", "Catalan (Spain)", "Mandarin (Simplified, China)", "Mandarin (Traditional, Taiwan)", "Croatian (Croatia)", "Czech (Czech Republic)", "Danish (Denmark)", "Dutch (Netherlands)", "English (United Kingdom)", "Estonian (Estonia)", "Finnish (Finland)", "French (France)", "Galician (Spain)", "Georgian (Georgia)", "German (Germany)", "Greek (Greece)", "Gujarati (India)", "Hebrew (Israel)", "Hindi (India)", "Hungarian (Hungary)", "Icelandic (Iceland)", "Sundanese (Indonesia)", "Italian (Italy)", "Japanese (Japan)", "Kannada (India)", "Kazakh (Kazakhstan)", "Khmer (Cambodia)", "Korean (South Korea)", "Lao (Laos)", "Latvian (Latvia)", "Lithuanian (Lithuania)", "Macedonian (Macedonia (FYROM))", "Malay (Malaysia)", "Malayalam (India)", "Marathi (India)", "Mongolian (Mongolia)", "Burmese (Myanmar (Burma))", "Nepali (Nepal)", "Persian (Iran)", "Polish (Poland)", "Portuguese (Brazil)", "Punjabi (Gurmukhi, India)", "Romanian (Romania)", "Russian (Russia)", "Serbian (Serbia)", "Southern Sotho (Latin, Lesotho)", "Sinhala (Sri Lanka)", "Slovak (Slovakia)", "Slovenian (Slovenia)", "Spanish (Argentina)", "Swahili", "Swedish (Sweden)", "Tamil (Sri Lanka)", "Telugu (India)", "Thai (Thailand)", "Turkish (Turkey)", "Ukrainian (Ukraine)", "Urdu (Pakistan)", "Uzbek (Uzbekistan)", "Vietnamese (Vietnam)", "Xhosa (South Africa)", "Zulu (South Africa)"],
+                                                                                     "datasets":[{"label":"# of Votes","data": [
+                                                                                            @Model.TrueAfCount,
+                                                                                            @Model.TrueSqCount,
+                                                                                            @Model.TrueAmCount,
+                                                                                            @Model.TrueArCount,
+                                                                                            @Model.TrueHyCount,
+                                                                                            @Model.TrueAzCount,
+                                                                                            @Model.TrueEuCount,
+                                                                                            @Model.TrueBnCount,
+                                                                                            @Model.TrueBgCount,
+                                                                                            @Model.TrueCaCount,
+                                                                                            @Model.TrueZhCnCount,
+                                                                                            @Model.TrueZhTwCount,
+                                                                                            @Model.TrueHrCount,
+                                                                                            @Model.TrueCsCount,
+                                                                                            @Model.TrueDaCount,
+                                                                                            @Model.TrueNlCount,
+                                                                                            @Model.TrueEnCount,
+                                                                                            @Model.TrueEtCount,
+                                                                                            @Model.TrueFiCount,
+                                                                                            @Model.TrueFrCount,
+                                                                                            @Model.TrueGlCount,
+                                                                                            @Model.TrueKaCount,
+                                                                                            @Model.TrueDeCount,
+                                                                                            @Model.TrueElCount,
+                                                                                            @Model.TrueGuCount,
+                                                                                            @Model.TrueIwCount,
+                                                                                            @Model.TrueHiCount,
+                                                                                            @Model.TrueHuCount,
+                                                                                            @Model.TrueIsCount,
+                                                                                            @Model.TrueIdCount,
+                                                                                            @Model.TrueItCount,
+                                                                                            @Model.TrueJaCount,
+                                                                                            @Model.TrueKnCount,
+                                                                                            @Model.TrueKkCount,
+                                                                                            @Model.TrueKmCount,
+                                                                                            @Model.TrueKoCount,
+                                                                                            @Model.TrueLoCount,
+                                                                                            @Model.TrueLvCount,
+                                                                                            @Model.TrueLtCount,
+                                                                                            @Model.TrueMkCount,
+                                                                                            @Model.TrueMsCount,
+                                                                                            @Model.TrueMlCount,
+                                                                                            @Model.TrueMrCount,
+                                                                                            @Model.TrueMnCount,
+                                                                                            @Model.TrueMyCount,
+                                                                                            @Model.TrueNeCount,
+                                                                                            @Model.TrueFaCount,
+                                                                                            @Model.TruePlCount,
+                                                                                            @Model.TruePtCount,
+                                                                                            @Model.TruePaCount,
+                                                                                            @Model.TrueRoCount,
+                                                                                            @Model.TrueRuCount,
+                                                                                            @Model.TrueSrCount,
+                                                                                            @Model.TrueStCount,
+                                                                                            @Model.TrueSiCount,
+                                                                                            @Model.TrueSkCount,
+                                                                                            @Model.TrueSlCount,
+                                                                                            @Model.TrueEsCount,
+                                                                                            @Model.TrueSwCount,
+                                                                                            @Model.TrueSvCount,
+                                                                                            @Model.TrueTaCount,
+                                                                                            @Model.TrueTeCount,
+                                                                                            @Model.TrueThCount,
+                                                                                            @Model.TrueTrCount,
+                                                                                            @Model.TrueUkCount,
+                                                                                            @Model.TrueUrCount,
+                                                                                            @Model.TrueUzCount,
+                                                                                            @Model.TrueViCount,
+                                                                                            @Model.TrueXhCount,
+                                                                                            @Model.TrueZuCount
+            ]}]}'></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Most Target Language Used</h4>
+                       <div class="ele-btn">
+                            <form asp-page="LanguagesAnalysis" asp-page-handler="YearTarget" method="post">
+                                <input type="date" id="selectDateEndYearTarget" asp-for="selectDateEndYearTarget" name="selectDateEndYearTarget" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" hidden />
+                                <button id="btnYear" type="submit">Last 365 Days</button>
+                            </form>
+                            <form asp-page="LanguagesAnalysis" asp-page-handler="QuarterTarget" method="post">
+                                <input type="date" id="selectDateEndQuarterTarget" asp-for="selectDateEndQuarterTarget" name="selectDateEndQuarterTarget" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" hidden />
+                                <button id="btnQuarter" type="submit">Last 90 Days</button>
+                            </form>
+                            <form asp-page="LanguagesAnalysis" asp-page-handler="MonthTarget" method="post">
+                                <input type="date" id="selectDateEndMonthTarget" asp-for="selectDateEndMonthTarget" name="selectDateEndMonthTarget" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" hidden />
+                                <button id="btnMonth" type="submit">Last 30 Days</button>
+                            </form>
+                            <form asp-page="LanguagesAnalysis" asp-page-handler="WeekTarget" method="post">
+                                <input type="date" id="selectDateEndWeekTarget" asp-for="selectDateEndWeekTarget" name="selectDateEndWeekTarget" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" hidden />
+                                <button id="btnWeek" type="submit">Last 7 Days</button>
+                            </form>
+                            <form asp-page="LanguagesAnalysis" asp-page-handler="Filter" method="post">
+                                <input type="date" id="selectDateStart" asp-for="selectDateStart" name="selectDateStart" value="@DateTime.Now.AddDays(-8).ToString("yyyy-MM-dd")" />
+                                <input type="date" id="selectDateEnd" asp-for="selectDateEnd" name="selectDateEnd" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" />
+                                <button id="btnApply" type="submit">Apply</button>
+                            </form>
+                        </div>
+                        <canvas id="barChart_Target_Language" data-chart-data='{"labels":["Afrikaans (South Africa)", "Albanian (Albania)", "Amharic (Ethiopia)", "Arabic (Egypt)", "Azerbaijani (Azerbaijan)", "Armenian (Armenia)", "Basque (Spain)", "Bengali (India)", "Bulgarian (Bulgaria)", "Catalan (Spain)", "Mandarin (Simplified, China)", "Mandarin (Traditional, Taiwan)", "Croatian (Croatia)", "Czech (Czech Republic)", "Danish (Denmark)", "Dutch (Netherlands)", "English (United Kingdom)", "Estonian (Estonia)", "Finnish (Finland)", "French (France)", "Galician (Spain)", "Georgian (Georgia)", "German (Germany)", "Greek (Greece)", "Gujarati (India)", "Hebrew (Israel)", "Hindi (India)", "Hungarian (Hungary)", "Icelandic (Iceland)", "Sundanese (Indonesia)", "Italian (Italy)", "Japanese (Japan)", "Kannada (India)", "Kazakh (Kazakhstan)", "Khmer (Cambodia)", "Korean (South Korea)", "Lao (Laos)", "Latvian (Latvia)", "Lithuanian (Lithuania)", "Macedonian (Macedonia (FYROM))", "Malay (Malaysia)", "Malayalam (India)", "Marathi (India)", "Mongolian (Mongolia)", "Burmese (Myanmar (Burma))", "Nepali (Nepal)", "Persian (Iran)", "Polish (Poland)", "Portuguese (Brazil)", "Punjabi (Gurmukhi, India)", "Romanian (Romania)", "Russian (Russia)", "Serbian (Serbia)", "Southern Sotho (Latin, Lesotho)", "Sinhala (Sri Lanka)", "Slovak (Slovakia)", "Slovenian (Slovenia)", "Spanish (Argentina)", "Swahili", "Swedish (Sweden)", "Tamil (Sri Lanka)", "Telugu (India)", "Thai (Thailand)", "Turkish (Turkey)", "Ukrainian (Ukraine)", "Urdu (Pakistan)", "Uzbek (Uzbekistan)", "Vietnamese (Vietnam)", "Xhosa (South Africa)", "Zulu (South Africa)"],
+                                                                                "datasets":[{"label":"# of Votes","data": [
+                @Model.AfCount,
+                @Model.SqCount,
+                @Model.AmCount,
+                @Model.ArCount,
+                @Model.HyCount,
+                @Model.AzCount,
+                @Model.EuCount,
+                @Model.BnCount,
+                @Model.BgCount,
+                @Model.CaCount,
+                @Model.ZhCnCount,
+                @Model.ZhTwCount,
+                @Model.HrCount,
+                @Model.CsCount,
+                @Model.DaCount,
+                @Model.NlCount,
+                @Model.EnCount,
+                @Model.EtCount,
+                @Model.FiCount,
+                @Model.FrCount,
+                @Model.GlCount,
+                @Model.KaCount,
+                @Model.DeCount,
+                @Model.ElCount,
+                @Model.GuCount,
+                @Model.IwCount,
+                @Model.HiCount,
+                @Model.HuCount,
+                @Model.IsCount,
+                @Model.IdCount,
+                @Model.ItCount,
+                @Model.JaCount,
+                @Model.KnCount,
+                @Model.KkCount,
+                @Model.KmCount,
+                @Model.KoCount,
+                @Model.LoCount,
+                @Model.LvCount,
+                @Model.LtCount,
+                @Model.MkCount,
+                @Model.MsCount,
+                @Model.MlCount,
+                @Model.MrCount,
+                @Model.MnCount,
+                @Model.MyCount,
+                @Model.NeCount,
+                @Model.FaCount,
+                @Model.PlCount,
+                @Model.PtCount,
+                @Model.PaCount,
+                @Model.RoCount,
+                @Model.RuCount,
+                @Model.SrCount,
+                @Model.StCount,
+                @Model.SiCount,
+                @Model.SkCount,
+                @Model.SlCount,
+                @Model.EsCount,
+                @Model.SwCount,
+                @Model.SvCount,
+                @Model.TaCount,
+                @Model.TeCount,
+                @Model.ThCount,
+                @Model.TrCount,
+                @Model.UkCount,
+                @Model.UrCount,
+                @Model.UzCount,
+                @Model.ViCount,
+                @Model.XhCount,
+                @Model.ZuCount
+            ]}]}'></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+$(document).ready(function(){
+    $("#btnWeek").click(function(){
+        changeDate(-7);
+    });
+    $("#btnMonth").click(function(){
+        changeDate(-30);
+    });
+    $("#btnQuarter").click(function(){
+        changeDate(-90);
+    });
+    $("#btnYear").click(function(){
+        changeDate(-365);
+    });
+});
+
+function changeDate(days) {
+    var defaultDate = new Date($("#selectDateEnd").val());
+    var customDate = new Date(defaultDate);
+    customDate.setDate(defaultDate.getDate() + days);
+
+    var day = ("0" + customDate.getDate()).slice(-2);
+    var month = ("0" + (customDate.getMonth() + 1)).slice(-2);
+    var formattedDate = customDate.getFullYear() + "-" + month + "-" + day;
+
+    $("#selectDateStart").val(formattedDate);
+}
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector("#btnApply").addEventListener("click", function() {
+        var endDateValue = document.getElementById("selectDateEnd").value;
+        document.getElementById("selectDateEndYearSource").value = endDateValue;
+        document.getElementById("selectDateEndYearTarget").value = endDateValue;
+
+    });
+});
+
+</script>
+    <!-- content-wrapper ends -->
+    <!-- partial:../../partials/_footer.html -->
+    <footer class="footer">
+        <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-center text-sm-left d-block d-sm-inline-block">
+                Copyright © <a asp-page="#"
+                               target="_blank">bootstrapdash.com</a> 2020
+            </span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
+                Free <a asp-page="#"
+                        target="_blank">Bootstrap dashboard </a>templates
+                from Bootstrapdash.com
+            </span>
+        </div>
+    </footer>
+    <!-- partial -->
+</div>
+<!-- main-panel ends -->
